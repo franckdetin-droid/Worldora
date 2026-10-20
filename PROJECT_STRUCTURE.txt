@@ -1,0 +1,81 @@
+================================================================================
+WORLDORA — ARBORESCENCE DÉTAILLÉE DU PROJET
+Plateforme : Marketplace B2B Internationale (Web Responsive & Android WebView)
+================================================================================
+
+/
+├── index.html                      # Point d'entrée HTML5 avec métadonnées SEO et polices
+├── metadata.json                   # Métadonnées d'application Google AI Studio
+├── package.json                    # Dépendances applicatives (React 19, Lucide, JSZip, Tailwind v4)
+├── tsconfig.json                   # Configuration du compilateur TypeScript
+├── vite.config.ts                  # Configuration du bundler Vite avec plugin React et Tailwind
+├── .env.example                    # Modèle des variables d'environnement non sensibles
+├── .gitignore                      # Règles d'exclusion Git (fichiers sensibles, caches, node_modules)
+│
+├── DOCUMENTATION TECHNIQUE
+│   ├── README.md                   # Guide complet d'installation, lancement, tests et maintenance
+│   ├── DEPLOYMENT.md               # Guide de déploiement en production (Cloud Run, Docker, VPS)
+│   ├── ENVIRONMENT_VARIABLES.md    # Répertoire exhaustif des variables et des clés d'API
+│   ├── API_DOCUMENTATION.md        # Spécifications de toutes les routes de messagerie et catalogue
+│   ├── ANDROID_WEBVIEW_INTEGRATION.md # Instructions de connexion à l'application Android native
+│   └── PROJECT_STRUCTURE.txt       # Ce document décrivant l'arborescence
+│
+├── public/
+│   └── assets/
+│       └── aistudio/
+│           └── WORLDORA_cahier_des_charges_chat_tableau_de_bord_20d0a8d4.txt # Spécifications d'origine
+│
+└── src/
+    ├── main.tsx                    # Point de montage React du DOM
+    ├── App.tsx                     # Routeur principal d'états, navigation mobile et modales
+    ├── index.css                   # Styles globaux Tailwind CSS v4 et polices B2B
+    │
+    ├── types/
+    │   └── index.ts                # Modèles TypeScript stricts (User, Product, Conversation, Message, AdVideo)
+    │
+    ├── data/
+    │   └── seedData.ts             # Données d'amorçage B2B (fournisseurs certifiés, produits, vidéos, analytics)
+    │
+    ├── services/
+    │   └── storageService.ts       # Couche de persistance et contrôles stricts d'autorisation
+    │                               # - Authentification & Profils
+    │                               # - Catalogue & Filtres (exclusion des brouillons en public)
+    │                               # - Messagerie sécurisée (contrôle d'accès acheteur/fournisseur)
+    │                               # - Régie Publicitaire Vidéo B2B
+    │                               # - Analytics Visiteurs mondiaux
+    │
+    ├── utils/
+    │   ├── fileUpload.ts           # Validation de sécurité des fichiers (MIME, taille, blocage exécutables)
+    │   └── projectExporter.ts      # Moteur d'exportation ZIP sécurisé avec contrôle d'exclusion
+    │
+    ├── components/
+    │   ├── layout/
+    │   │   ├── Navbar.tsx          # Barre de navigation supérieure (Top Bar Contract 3 zones)
+    │   │   ├── MobileTabBar.tsx    # Barre d'onglets inférieure ergonomique pour smartphone & WebView
+    │   │   └── Footer.tsx          # Pied de page B2B avec piliers de réassurance et mentions légales
+    │   │
+    │   ├── catalog/
+    │   │   ├── CatalogView.tsx     # Grille de produits avec filtres (catégorie, pays, prix) + pubs vidéos
+    │   │   ├── ProductCard.tsx     # Carte produit avec prix tabulaire, MOQ et pays d'origine
+    │   │   └── ProductDetailModal.tsx # Fiche produit détaillée avec spécifications, documents PDF et bouton chat
+    │   │
+    │   ├── chat/
+    │   │   └── ChatModal.tsx       # Fenêtre de messagerie directe avec pièces jointes et signalement
+    │   │
+    │   ├── auth/
+    │   │   └── AuthModal.tsx       # Inscription, connexion, choix de rôle et démos rapides en 1 clic
+    │   │
+    │   ├── dashboard/
+    │   │   └── DashboardView.tsx   # Tableau de bord professionnel (stats réelles, mes produits, ajout avec Drag&Drop)
+    │   │
+    │   ├── admin/
+    │   │   ├── AdminDashboardView.tsx # Panneau Super-Admin mobile (Analytics pays, régie vidéo, modération)
+    │   │   └── ProjectExportView.tsx  # Page d'exportation et téléchargement du projet ZIP complet
+    │   │
+    │   └── videos/
+    │       ├── VideoAdCard.tsx     # Lecteur vidéo publicitaire B2B avec contrôles, son et bouton CTA direct
+    │       └── B2BVideoFeed.tsx    # Flux continu de vidéos et démonstrations usines ("Reels B2B")
+    │
+    └── assets/
+        └── images/                 # Visuels B2B haute résolution (cargaisons, usines, produits)
+================================================================================

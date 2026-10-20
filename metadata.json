@@ -1,0 +1,6 @@
+{
+  "name": "WORLDORA - Marketplace B2B Internationale",
+  "description": "Plateforme mondiale de commerce B2B reliant acheteurs et fournisseurs : catalogue produits, messagerie directe sécurisée et gestion de stocks.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,342 @@
+WORLDORA — CAHIER DES CHARGES COMPLET DU SITE WEB FLASK
+Version : 1.0
+Objectif : terminer le site existant sans recommencer le projet.
+Plateforme : site web Flask (Python), utilisable sur mobile Android et ordinateur.
+Langue par défaut : français. Prévoir une structure permettant d'ajouter d'autres langues plus tard.
+
+IMPORTANT POUR LE DÉVELOPPEMENT
+- Modifier le projet Flask EXISTANT. Ne pas créer un deuxième projet et ne pas supprimer les fonctionnalités déjà opérationnelles.
+- Avant toute modification, examiner l'arborescence, les routes Flask, les modèles de base de données, les templates, les fichiers CSS/JS et la configuration existante.
+- Réutiliser la base de données et les technologies déjà présentes si elles conviennent.
+- Ne pas prétendre qu'une fonctionnalité fonctionne si elle n'est pas réellement implémentée et testée.
+- Fournir des instructions adaptées au projet et indiquer clairement les fichiers créés/modifiés.
+- Ne jamais placer les mots de passe, clés secrètes ou identifiants privés dans le code public.
+
+==================================================
+1. VISION DU PRODUIT
+==================================================
+
+WORLDORA est une marketplace B2B internationale qui permet aux fournisseurs de présenter leurs produits et aux acheteurs de découvrir les offres et de discuter directement avec les fournisseurs.
+
+Le système de demande de devis doit être remplacé par une messagerie directe. Le bouton principal sur les fiches produits doit être « Envoyer un message » ou « Contacter le fournisseur », et non « Demander un devis ».
+
+Le site doit être professionnel, rapide, rassurant, responsive et agréable sur téléphone Android, tablette et ordinateur.
+
+==================================================
+2. COMPTES ET CONNEXION OBLIGATOIRE
+==================================================
+
+Créer un système complet de compte utilisateur :
+- Inscription avec nom complet, adresse e-mail, mot de passe et type de compte.
+- Types de compte : Acheteur et Fournisseur. Prévoir la possibilité qu'un utilisateur soit les deux si la structure actuelle le permet.
+- Connexion et déconnexion.
+- Vérification des champs et messages d'erreur compréhensibles.
+- Stockage sécurisé des mots de passe avec un mécanisme de hachage adapté, jamais en clair.
+- Sessions sécurisées, protection CSRF sur les formulaires lorsque pertinent et validation côté serveur.
+- Pages de profil : nom, entreprise, pays, ville, description de l'entreprise et coordonnées professionnelles facultatives.
+- Prévoir une procédure sûre de réinitialisation du mot de passe si l'envoi d'e-mails est configuré. Ne pas simuler un envoi d'e-mail qui n'existe pas.
+- Ne pas exposer les données privées des comptes.
+
+RÈGLE OBLIGATOIRE :
+L'utilisateur doit être connecté pour :
+1. Envoyer un message.
+2. Ouvrir et utiliser une conversation privée.
+3. Ajouter, modifier ou supprimer ses propres produits.
+4. Accéder à son tableau de bord.
+
+Si un visiteur non connecté clique sur « Envoyer un message », le rediriger vers la page de connexion avec un message du type :
+« Connectez-vous pour contacter ce fournisseur. »
+Après une connexion réussie, le ramener vers le produit ou la conversation qu'il souhaitait ouvrir, si cela est possible en toute sécurité.
+
+==================================================
+3. MESSAGERIE DIRECTE — REMPLACER LE SYSTÈME DE DEVIS
+==================================================
+
+Supprimer ou désactiver les boutons et parcours de demande de devis visibles dans l'interface et les remplacer par la messagerie directe. Ne pas supprimer des données existantes sans sauvegarde ni confirmation.
+
+Sur chaque fiche produit :
+- Bouton « Envoyer un message ».
+- Afficher clairement le nom du fournisseur et un lien vers son profil.
+- Au clic, exiger une connexion.
+- Si l'utilisateur est connecté, ouvrir ou créer une conversation privée entre l'acheteur et le fournisseur, liée au produit concerné.
+- Empêcher un fournisseur de démarrer une conversation avec lui-même à propos de son propre produit.
+
+Fonctions de messagerie :
+- Liste des conversations de l'utilisateur.
+- Nom et profil de l'interlocuteur.
+- Produit associé à la conversation.
+- Historique des messages trié chronologiquement.
+- Champ de saisie et bouton « Envoyer ».
+- Horodatage des messages.
+- Indicateur de nouveaux messages ou de messages non lus, si possible.
+- État vide avec un message clair quand aucune conversation n'existe.
+- Mise à jour des nouveaux messages sans actualisation complète, si la technologie existante le permet.
+- Sur mobile, interface de chat adaptée à l'écran et clavier.
+- Limiter la longueur des messages et valider le contenu côté serveur.
+- Afficher les messages comme du texte échappé, sans exécuter de HTML fourni par les utilisateurs.
+- Ne pas permettre à un utilisateur de consulter une conversation dont il n'est pas membre.
+- Les utilisateurs ne peuvent modifier ou supprimer que leurs propres messages si cette fonction est proposée.
+- Ajouter une possibilité de signaler un message ou un utilisateur si cela peut être fait proprement.
+- Ne pas inventer de fausse notification ni prétendre que les messages sont en temps réel si ce n'est pas implémenté.
+
+Sécurité :
+- Chaque route de conversation et de message doit vérifier côté serveur l'identité et l'appartenance de l'utilisateur à la conversation.
+- Vérifier les autorisations pour chaque opération, pas seulement cacher les boutons.
+- Ne jamais faire confiance à un identifiant de conversation fourni par le navigateur sans vérifier les droits.
+- Ajouter des protections contre les envois automatisés abusifs dans la mesure du possible.
+
+==================================================
+4. TABLEAU DE BORD PROFESSIONNEL
+==================================================
+
+Créer un tableau de bord moderne après connexion, avec navigation claire et adaptée au mobile.
+
+Menu recommandé :
+- Vue d'ensemble
+- Mes produits
+- Ajouter un produit
+- Mes messages
+- Mon profil / Mon entreprise
+- Paramètres
+- Déconnexion
+
+Page « Vue d'ensemble » :
+- Message de bienvenue avec le nom de l'utilisateur.
+- Cartes de statistiques réelles : nombre de produits publiés, produits en brouillon, conversations et messages non lus, si ces données existent.
+- Raccourcis vers « Ajouter un produit », « Voir mes produits » et « Mes messages ».
+- Les chiffres doivent provenir de la base de données, pas de valeurs inventées.
+- Afficher des états vides utiles pour un nouveau compte.
+
+Le tableau de bord doit être responsive, rapide et facile à utiliser sur un téléphone Android. Utiliser des boutons suffisamment grands, des formulaires lisibles et une navigation claire.
+
+==================================================
+5. AJOUTER UN PRODUIT
+==================================================
+
+Créer une page « Ajouter un produit » avec un formulaire contenant au minimum :
+
+Champs obligatoires :
+- Nom du produit.
+- Catégorie.
+- Description détaillée.
+- Prix.
+- Devise du prix.
+- Unité de vente (par exemple pièce, kilogramme, tonne, carton ou lot).
+- Pays d'origine ou pays du fournisseur.
+- Quantité minimale de commande, si applicable.
+- Au moins une image du produit, si le stockage d'images est correctement configuré.
+
+Champs facultatifs :
+- Marque.
+- Référence/SKU.
+- Plusieurs images.
+- Quantité disponible.
+- Détails techniques.
+- Conditions de livraison.
+- Délai de disponibilité.
+- Étiquettes/mots-clés.
+
+Exigences :
+- Boutons « Publier le produit » et « Enregistrer en brouillon ».
+- Validation des champs côté serveur.
+- Prix et quantités doivent être des valeurs valides et non négatives.
+- Vérifier le type, la taille et le contenu des fichiers image. Ne pas accepter de fichiers exécutables.
+- Ne pas faire confiance au nom de fichier fourni par l'utilisateur.
+- Afficher les erreurs près des champs concernés.
+- Afficher une confirmation après enregistrement réussi.
+- Un produit appartient au compte fournisseur qui l'a créé.
+- Seul son propriétaire ou un administrateur autorisé peut le modifier ou le supprimer.
+- Permettre de prévisualiser le produit avant publication si possible.
+- Ne pas afficher de faux produits ou de fausses statistiques comme s'il s'agissait de données réelles.
+
+==================================================
+6. PAGE « MES PRODUITS »
+==================================================
+
+Afficher les produits du fournisseur connecté sous forme de cartes ou de tableau adapté aux petits écrans.
+
+Pour chaque produit :
+- Image principale.
+- Nom.
+- Prix et devise.
+- Statut : publié ou brouillon.
+- Date de création, si disponible.
+- Boutons « Voir », « Modifier » et « Supprimer ».
+
+Fonctions :
+- Modifier les descriptions, les prix, les catégories et les images.
+- Enregistrer les modifications en base de données.
+- Demander confirmation avant suppression.
+- Vérifier côté serveur que le produit appartient bien à l'utilisateur.
+- Prévoir un message utile si aucun produit n'a encore été ajouté.
+- Les acheteurs ne doivent pas pouvoir modifier les produits d'autres fournisseurs.
+
+==================================================
+7. CATALOGUE ET FICHES PRODUITS
+==================================================
+
+Le catalogue public doit proposer :
+- Une grille responsive de produits.
+- Image, nom, prix, devise, catégorie et fournisseur.
+- Recherche par nom de produit.
+- Filtres par catégorie et pays si les données nécessaires existent.
+- Page de détail pour chaque produit.
+- Profil public de l'entreprise ou du fournisseur.
+- Bouton « Envoyer un message » sur la fiche produit.
+- Affichage d'un état vide si aucun résultat n'est trouvé.
+- Échapper toutes les données utilisateurs affichées et valider les entrées de recherche.
+
+Ne pas afficher un produit en brouillon publiquement.
+
+==================================================
+8. DESIGN ET EXPÉRIENCE UTILISATEUR
+==================================================
+
+Créer une identité visuelle cohérente et professionnelle :
+- Nom de marque : WORLDORA.
+- Style : marketplace B2B internationale, moderne, claire et crédible.
+- Mise en page propre avec espace, hiérarchie visuelle et typographie lisible.
+- Navigation facile sur mobile.
+- Boutons cohérents et visibles.
+- Formulaires accessibles et faciles à remplir.
+- États de chargement, erreurs, confirmations et pages vides.
+- Footer avec liens utiles et informations légales disponibles.
+- Ne pas inventer d'adresse d'entreprise, de témoignages, de certifications, de partenaires ou de statistiques.
+- Éviter les animations lourdes et les éléments qui ralentissent les téléphones.
+- Prévoir les bases du référencement : titres de pages, descriptions pertinentes et URLs lisibles si la structure actuelle le permet.
+
+==================================================
+9. MODÈLES DE DONNÉES À PRÉVOIR
+==================================================
+
+Adapter ces modèles à la base de données existante au lieu de créer des doublons inutiles.
+
+Utilisateur :
+- id
+- nom
+- e-mail unique
+- mot de passe haché
+- type de compte
+- nom de l'entreprise
+- pays
+- ville
+- description
+- date de création
+
+Produit :
+- id
+- fournisseur_id (référence vers l'utilisateur)
+- nom
+- catégorie
+- description
+- prix
+- devise
+- unité de vente
+- quantité minimale
+- image principale et images supplémentaires si prises en charge
+- pays d'origine
+- statut (brouillon/publié)
+- date de création
+- date de modification
+
+Conversation :
+- id
+- acheteur_id
+- fournisseur_id
+- produit_id si la conversation concerne un produit
+- date de création
+- date du dernier message
+
+Message :
+- id
+- conversation_id
+- expéditeur_id
+- contenu
+- date d'envoi
+- état de lecture si implémenté
+
+Ajouter les clés étrangères et index nécessaires. Éviter les conversations dupliquées pour le même couple d'utilisateurs et le même produit, selon les règles retenues pour l'application.
+
+==================================================
+10. EXIGENCES TECHNIQUES FLASK
+==================================================
+
+- Conserver Flask et la structure actuelle du projet.
+- Réutiliser les blueprints, modèles, formulaires et templates déjà existants.
+- Si SQLAlchemy est déjà utilisé, conserver les conventions et préparer des migrations sûres.
+- Si une base de données existe déjà, ne pas la remplacer sans raison.
+- Organiser le code clairement : routes, modèles, templates, fichiers statiques et configuration, selon la structure actuelle.
+- Utiliser les sessions Flask de façon sécurisée.
+- Utiliser une clé secrète via une variable d'environnement en production.
+- Ne pas activer le mode debug en production.
+- Utiliser HTTPS en production.
+- Vérifier les permissions côté serveur pour toutes les routes privées.
+- Protéger les formulaires contre les attaques CSRF si applicable.
+- Ajouter des messages flash et des pages d'erreur utiles.
+- Conserver les dépendances compatibles avec l'environnement actuel.
+- Prévoir un fichier requirements.txt cohérent si le projet en utilise un.
+- Ne jamais exposer les fichiers de configuration sensibles ni les secrets dans le dépôt public.
+- Si un service de messagerie instantanée nécessite une infrastructure supplémentaire, expliquer les limites et les coûts avant de l'ajouter. Commencer avec une solution simple et abordable.
+
+==================================================
+11. TESTS OBLIGATOIRES AVANT DE DIRE QUE LE SITE EST TERMINÉ
+==================================================
+
+Tester au minimum :
+1. Un visiteur peut parcourir le catalogue et consulter les fiches publiques.
+2. Un visiteur non connecté ne peut pas envoyer de message.
+3. Après connexion, un acheteur peut contacter un fournisseur depuis une fiche produit.
+4. Les messages sont enregistrés et visibles aux deux membres autorisés de la conversation.
+5. Un troisième utilisateur ne peut pas lire cette conversation.
+6. Un fournisseur peut ajouter un produit avec description et prix.
+7. Le produit est enregistré et apparaît dans « Mes produits ».
+8. Le fournisseur peut modifier son propre produit.
+9. Un autre fournisseur ne peut pas modifier ce produit.
+10. Les produits en brouillon ne sont pas visibles dans le catalogue public.
+11. Les formulaires affichent correctement les erreurs.
+12. Les principales pages sont utilisables sur un petit écran Android.
+13. Les routes protégées refusent l'accès aux utilisateurs non autorisés.
+14. Le site existant et ses fonctionnalités utiles continuent de fonctionner.
+
+==================================================
+12. ORDRE DE RÉALISATION
+==================================================
+
+Étape 1 : examiner le projet actuel et faire une sauvegarde.
+Étape 2 : identifier les routes, modèles, templates, base de données et mécanisme de connexion déjà existants.
+Étape 3 : préparer ou compléter les comptes et les autorisations.
+Étape 4 : construire le tableau de bord.
+Étape 5 : créer le formulaire d'ajout et la gestion des produits.
+Étape 6 : remplacer les boutons et parcours de devis par la messagerie directe.
+Étape 7 : construire les conversations et l'enregistrement sécurisé des messages.
+Étape 8 : améliorer le design mobile et les états d'erreur.
+Étape 9 : exécuter les tests de sécurité et de fonctionnement.
+Étape 10 : fournir les instructions de lancement et de déploiement du site Flask.
+Étape 11 : une fois le site accessible en HTTPS, le connecter à l'application Android WebView existante et générer l'APK.
+
+Après chaque étape :
+- Expliquer ce qui a été modifié.
+- Donner les chemins exacts des fichiers concernés.
+- Indiquer les commandes à exécuter si nécessaire.
+- Signaler les informations que le développeur doit fournir.
+- Ne pas passer à l'étape suivante si une erreur importante empêche de continuer.
+
+==================================================
+13. LIVRABLE FINAL ATTENDU
+==================================================
+
+Un site WORLDORA Flask fonctionnel, basé sur le projet existant, avec :
+- Inscription, connexion et déconnexion.
+- Accès au chat uniquement après connexion.
+- Messagerie privée acheteur-fournisseur.
+- Catalogue et fiches produits.
+- Tableau de bord professionnel.
+- Ajout de produits avec descriptions, prix, devise et images.
+- Gestion des produits par leur propriétaire.
+- Interface mobile responsive.
+- Contrôles de sécurité et tests documentés.
+- Instructions claires pour exécuter et déployer le site.
+- Préparation à l'intégration dans l'application Android WebView existante.
+
+CONSIGNE FINALE
+Commence par inspecter le projet Flask existant et présente un bref diagnostic de sa structure. Ensuite, propose les modifications nécessaires fichier par fichier. Ne recommence pas le projet, ne supprime pas les données existantes et ne remplace pas la demande de devis par un faux chat visuel : la messagerie doit enregistrer les messages et contrôler les accès.
