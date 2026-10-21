@@ -569,16 +569,6 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
 
               <div className="pt-2 mt-2 border-t border-slate-100 space-y-1">
-                {onNavigateAdmin && (
-                  <button
-                    type="button"
-                    onClick={onNavigateAdmin}
-                    className="w-full text-left px-3.5 py-2.5 rounded-xl flex items-center gap-3 bg-amber-400 hover:bg-amber-300 text-slate-950 font-bold transition-all cursor-pointer shadow-xs mb-1"
-                  >
-                    <ShieldCheck className="w-4 h-4 text-slate-950 shrink-0" />
-                    <span>Espace Super-Admin</span>
-                  </button>
-                )}
                 <button
                   onClick={onLogout}
                   className="w-full text-left px-3.5 py-2.5 rounded-xl flex items-center gap-3 text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"

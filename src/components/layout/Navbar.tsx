@@ -17,7 +17,7 @@ interface NavbarProps {
   unreadCount: number;
   onOpenAuth: (redirectAction?: string) => void;
   onLogout: () => void;
-  onNavigate: (view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product') => void;
+  onNavigate: (view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product' | 'contact') => void;
   currentView: string;
 }
 
@@ -76,43 +76,25 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span>Vidéos & Pubs B2B</span>
             </button>
 
-            {/* Admin link always visible */}
-            <button
-              onClick={() => onNavigate('admin')}
-              className={`transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1.5 font-bold ${
-                currentView === 'admin'
-                  ? 'text-amber-600 border-b-2 border-amber-500 py-5 -mb-px'
-                  : 'text-amber-600 hover:text-amber-700'
-              }`}
-            >
-              <ShieldCheck className="w-4 h-4 text-amber-500" />
-              <span>Espace Super-Admin</span>
-            </button>
-
             <a
               href="#how-it-works"
               className="hover:text-slate-900 transition-colors whitespace-nowrap"
             >
               Comment ça marche
             </a>
+
+            <button
+              onClick={() => onNavigate('contact')}
+              className={`hover:text-slate-900 transition-colors whitespace-nowrap cursor-pointer flex items-center gap-1 ${
+                currentView === 'contact' ? 'text-amber-600 font-bold border-b-2 border-amber-500 py-5 -mb-px' : ''
+              }`}
+            >
+              <span>Nous contacter</span>
+            </button>
           </nav>
 
           {/* Zone 3: Primary Actions */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-            {/* Always visible Admin Quick Button */}
-            <button
-              onClick={() => onNavigate('admin')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-lg transition-all cursor-pointer shadow-xs active:scale-95 ${
-                currentView === 'admin'
-                  ? 'bg-amber-500 text-slate-950 ring-2 ring-amber-300'
-                  : 'bg-amber-400 hover:bg-amber-300 text-slate-950'
-              }`}
-              title="Accéder au panneau d'administration mondial et exportateur ZIP"
-            >
-              <ShieldCheck className="w-4 h-4 text-slate-950" />
-              <span className="hidden sm:inline">Espace</span>
-              <span>Admin</span>
-            </button>
 
             {currentUser ? (
               <div className="flex items-center gap-2 sm:gap-3">

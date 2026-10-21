@@ -92,6 +92,15 @@ export interface Message {
   read: boolean;
 }
 
+export interface VideoComment {
+  id: string;
+  videoId: string;
+  userName: string;
+  userCompany?: string;
+  content: string;
+  createdAt: string;
+}
+
 export interface AdVideo {
   id: string;
   title: string;
@@ -109,6 +118,26 @@ export interface AdVideo {
   status: 'active' | 'paused';
   views: number;
   clicks: number;
+  likes?: number;
+  likedBy?: string[];
+  comments?: VideoComment[];
+  createdAt: string;
+}
+
+export interface AdBanner {
+  id: string;
+  title: string;
+  subtitle: string;
+  imageUrl: string;
+  badgeText?: string;
+  ctaText: string;
+  linkType: 'video' | 'product' | 'external' | 'contact';
+  targetId?: string;
+  targetUrl?: string;
+  position: 'top' | 'middle';
+  status: 'active' | 'paused';
+  clicks: number;
+  impressions: number;
   createdAt: string;
 }
 
@@ -128,4 +157,22 @@ export interface ProductFilterState {
   minPrice?: number;
   maxPrice?: number;
   sortBy: 'recent' | 'price-asc' | 'price-desc' | 'moq-asc';
+}
+
+export interface SocialLinks {
+  facebook?: string;
+  tiktok?: string;
+  instagram?: string;
+  youtube?: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  createdAt: string;
+  status: 'new' | 'read' | 'replied';
 }

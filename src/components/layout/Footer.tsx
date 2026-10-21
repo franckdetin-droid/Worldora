@@ -1,11 +1,13 @@
 import React from 'react';
-import { ShieldCheck, MessageSquare, Globe2, Truck } from 'lucide-react';
+import { ShieldCheck, MessageSquare, Globe2, Truck, Lock } from 'lucide-react';
+import { getSocialLinks } from '../../services/storageService';
 
 interface FooterProps {
-  onNavigate?: (view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product') => void;
+  onNavigate?: (view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product' | 'contact') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const socialLinks = getSocialLinks();
   return (
     <footer className="bg-slate-900 text-slate-300 pt-12 pb-20 md:pb-12 border-t border-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -83,11 +85,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <li>
                 <button
                   type="button"
-                  onClick={() => onNavigate && onNavigate('admin')}
-                  className="text-amber-400 hover:text-amber-300 font-bold transition-colors cursor-pointer flex items-center gap-1.5"
+                  onClick={() => onNavigate && onNavigate('videos')}
+                  className="hover:text-white transition-colors cursor-pointer"
                 >
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  <span>Espace Super-Admin & Export ZIP</span>
+                  Vidéos & Démonstrations Usines
                 </button>
               </li>
               <li><a href="#" className="hover:text-white transition-colors">Catalogue Général</a></li>
@@ -100,23 +101,108 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
           <div>
             <h5 className="text-xs font-semibold text-white uppercase tracking-wider mb-3">Informations Légales</h5>
             <ul className="space-y-2 text-xs text-slate-400">
+              <li>
+                <button
+                  type="button"
+                  onClick={() => onNavigate && onNavigate('contact')}
+                  className="text-amber-400 hover:text-amber-300 font-semibold transition-colors cursor-pointer"
+                >
+                  Nous contacter (ggh52167@gmail.com)
+                </button>
+              </li>
               <li><a href="#" className="hover:text-white transition-colors">Conditions Générales d'Utilisation</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Politique de Confidentialité</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Sécurité des Échanges & Données</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Signaler un abus ou litige</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Support & Contact</a></li>
             </ul>
+          </div>
+        </div>
+
+        {/* Social Media Channels Row */}
+        <div className="py-6 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 text-xs text-slate-400">
+            <span className="font-semibold text-white">Réseaux Sociaux Officiels :</span>
+            <span>Rejoignez la communauté WORLDORA</span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            {socialLinks.facebook && (
+              <a
+                href={socialLinks.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-blue-600 text-slate-300 hover:text-white transition-colors flex items-center justify-center font-bold text-sm shadow-xs"
+                title="Facebook WORLDORA"
+              >
+                f
+              </a>
+            )}
+            {socialLinks.tiktok && (
+              <a
+                href={socialLinks.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors flex items-center justify-center font-bold text-xs shadow-xs"
+                title="TikTok WORLDORA"
+              >
+                ♬
+              </a>
+            )}
+            {socialLinks.instagram && (
+              <a
+                href={socialLinks.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-pink-600 text-slate-300 hover:text-white transition-colors flex items-center justify-center font-bold text-sm shadow-xs"
+                title="Instagram WORLDORA"
+              >
+                📸
+              </a>
+            )}
+            {socialLinks.youtube && (
+              <a
+                href={socialLinks.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-xl bg-slate-800 hover:bg-red-600 text-slate-300 hover:text-white transition-colors flex items-center justify-center font-bold text-xs shadow-xs"
+                title="YouTube WORLDORA"
+              >
+                ▶
+              </a>
+            )}
           </div>
         </div>
 
         <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} WORLDORA B2B Marketplace. Tous droits réservés.</p>
           <div className="flex items-center gap-4">
+            <button
+              type="button"
+              onClick={() => onNavigate && onNavigate('contact')}
+              className="text-slate-400 hover:text-white transition-colors cursor-pointer"
+            >
+              Contact Direct
+            </button>
+            <span>·</span>
             <span>Français (FR)</span>
             <span>·</span>
             <span>EUR (€)</span>
             <span>·</span>
             <span>HTTPS Sécurisé</span>
+            {onNavigate && (
+              <>
+                <span>·</span>
+                <button
+                  type="button"
+                  onClick={() => onNavigate('admin')}
+                  className="hover:text-amber-400 text-slate-500 transition-colors cursor-pointer inline-flex items-center gap-1"
+                  title="Accéder à la console d'administration (/admin)"
+                >
+                  <Lock className="w-3 h-3 text-slate-400" />
+                  <span>Admin (/admin)</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

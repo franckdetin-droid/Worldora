@@ -9,7 +9,6 @@ import {
   getCurrentUser,
   getPublicProducts,
   getTotalUnreadCount,
-  loginUser,
   logoutUser,
   getOrCreateConversation,
   initializeStorage,
@@ -24,9 +23,22 @@ import { ProductDetailModal } from './components/catalog/ProductDetailModal';
 import { AuthModal } from './components/auth/AuthModal';
 import { ChatModal } from './components/chat/ChatModal';
 import { DashboardView } from './components/dashboard/DashboardView';
-import { AdminDashboardView } from './components/admin/AdminDashboardView';
-import { AdminAccessModal } from './components/admin/AdminAccessModal';
+import { AdminStandalonePage } from './components/admin/AdminStandalonePage';
 import { B2BVideoFeed } from './components/videos/B2BVideoFeed';
+
+// Helper to check if current URL points to admin (/admin, #admin, ?admin)
+const checkIsAdminUrl = (): boolean => {
+  const path = window.location.pathname.toLowerCase();
+  const hash = window.location.hash.toLowerCase();
+  const search = window.location.search.toLowerCase();
+  return (
+    path.endsWith('/admin') ||
+    path.endsWith('/admin/') ||
+    hash === '#admin' ||
+    hash.endsWith('/admin') ||
+    search.includes('admin')
+  );
+};
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
@@ -35,7 +47,7 @@ export default function App() {
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [currentView, setCurrentView] = useState<
     'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product'
-  >('catalog');
+  >(() => (checkIsAdminUrl() ? 'admin' : 'catalog'));
   const [dashboardTab, setDashboardTab] = useState<
     'overview' | 'products' | 'add-product' | 'messages' | 'profile' | 'settings'
   >('overview');
@@ -67,14 +79,25 @@ export default function App() {
 
   useEffect(() => {
     refreshAppData();
-    if (window.location.hash === '#admin' || window.location.search.includes('admin=1')) {
-      const adminRes = loginUser('admin@worldora.com');
-      if (adminRes.success && adminRes.user) {
-        setCurrentUser(adminRes.user);
-        setUnreadCount(getTotalUnreadCount(adminRes.user.id));
-      }
+
+    if (checkIsAdminUrl()) {
       setCurrentView('admin');
     }
+
+    const handleUrlChange = () => {
+      if (checkIsAdminUrl()) {
+        setCurrentView('admin');
+      } else {
+        setCurrentView((prev) => (prev === 'admin' ? 'catalog' : prev));
+      }
+    };
+
+    window.addEventListener('popstate', handleUrlChange);
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => {
+      window.removeEventListener('popstate', handleUrlChange);
+      window.removeEventListener('hashchange', handleUrlChange);
+    };
   }, []);
 
   // When user logs in
@@ -83,9 +106,14 @@ export default function App() {
     setUnreadCount(getTotalUnreadCount(user.id));
     setIsAuthModalOpen(false);
 
-    // If user is Admin and logged in from an admin intent, switch to admin view
-    if (user.isAdmin && (currentView === 'admin' || authRedirectNotice?.includes('administrateur'))) {
+    // If user is Admin, switch directly to admin view
+    if (user.isAdmin) {
       setCurrentView('admin');
+      try {
+        window.history.pushState(null, '', '/admin');
+      } catch {
+        window.location.hash = '#admin';
+      }
       return;
     }
 
@@ -115,6 +143,11 @@ export default function App() {
     setCurrentUser(null);
     setUnreadCount(0);
     setCurrentView('catalog');
+    try {
+      window.history.pushState(null, '', '/');
+    } catch {
+      window.location.hash = '';
+    }
   };
 
   // Contact supplier CTA handler
@@ -167,28 +200,30 @@ export default function App() {
   const handleNavigate = (
     view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product'
   ) => {
+    if (view === 'admin') {
+      setCurrentView('admin');
+      try {
+        window.history.pushState(null, '', '/admin');
+      } catch {
+        window.location.hash = '#admin';
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (view === 'catalog') {
       setCurrentView('catalog');
+      try {
+        window.history.pushState(null, '', '/');
+      } catch {
+        window.location.hash = '';
+      }
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
     if (view === 'videos') {
       setCurrentView('videos');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-
-    // Admin route: Immediate direct access for the creator
-    if (view === 'admin') {
-      if (!currentUser || !currentUser.isAdmin) {
-        const adminRes = loginUser('admin@worldora.com');
-        if (adminRes.success && adminRes.user) {
-          setCurrentUser(adminRes.user);
-          setUnreadCount(getTotalUnreadCount(adminRes.user.id));
-        }
-      }
-      setCurrentView('admin');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
@@ -219,6 +254,20 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // ================= DEDICATED STANDALONE ADMIN PAGE =================
+  // If user is on /admin or #admin, render its own dedicated separate page
+  if (currentView === 'admin') {
+    return (
+      <AdminStandalonePage
+        currentUser={currentUser}
+        onNavigatePublic={() => handleNavigate('catalog')}
+        onViewProductDetail={(p) => setSelectedProduct(p)}
+        onDataReset={refreshAppData}
+      />
+    );
+  }
+
+  // ================= PUBLIC MARKETPLACE LAYOUT =================
   return (
     <div className="min-h-screen flex flex-col bg-slate-50 text-slate-900 selection:bg-slate-900 selection:text-white">
       {/* Top Navigation */}
@@ -256,31 +305,6 @@ export default function App() {
               const target = getProductById(prodId);
               if (target) setSelectedProduct(target);
             }}
-          />
-        )}
-
-        {currentView === 'admin' && (
-          <AdminDashboardView
-            currentUser={
-              currentUser && currentUser.isAdmin
-                ? currentUser
-                : {
-                    id: 'user-admin-root',
-                    name: 'Direction Générale WORLDORA',
-                    email: 'admin@worldora.com',
-                    accountType: 'both',
-                    companyName: 'WORLDORA Global Headquarters',
-                    country: 'France',
-                    city: 'Paris',
-                    description: 'Super Administrateur de la plateforme WORLDORA.',
-                    verified: true,
-                    isAdmin: true,
-                    createdAt: '2025-01-01T00:00:00Z',
-                  }
-            }
-            onLogout={handleLogout}
-            onNavigateCatalog={() => setCurrentView('catalog')}
-            onViewProductDetail={(p) => setSelectedProduct(p)}
           />
         )}
 

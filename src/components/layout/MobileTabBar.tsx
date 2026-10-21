@@ -89,22 +89,6 @@ export const MobileTabBar: React.FC<MobileTabBarProps> = ({
             <span className="text-[10px] mt-0.5">Compte</span>
           </button>
         )}
-
-        {/* 5. Permanent Super-Admin Tab */}
-        <button
-          onClick={() => onNavigate('admin')}
-          className={`flex flex-col items-center justify-center flex-1 py-1 cursor-pointer transition-colors ${
-            currentView === 'admin'
-              ? 'text-amber-500 font-black'
-              : 'text-amber-600 hover:text-amber-500 font-medium'
-          }`}
-        >
-          <div className="relative">
-            <ShieldCheck className="w-5 h-5 text-amber-500" />
-            <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-          </div>
-          <span className="text-[10px] mt-0.5 font-bold text-amber-600">Admin</span>
-        </button>
       </div>
     </nav>
   );

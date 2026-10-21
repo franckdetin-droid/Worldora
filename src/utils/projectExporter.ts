@@ -32,6 +32,7 @@ import authModalRaw from '../components/auth/AuthModal.tsx?raw';
 import chatModalRaw from '../components/chat/ChatModal.tsx?raw';
 import dashboardViewRaw from '../components/dashboard/DashboardView.tsx?raw';
 import adminDashboardRaw from '../components/admin/AdminDashboardView.tsx?raw';
+import adminStandalonePageRaw from '../components/admin/AdminStandalonePage.tsx?raw';
 import projectExportViewRaw from '../components/admin/ProjectExportView.tsx?raw';
 import videoFeedRaw from '../components/videos/B2BVideoFeed.tsx?raw';
 import videoAdCardRaw from '../components/videos/VideoAdCard.tsx?raw';
@@ -436,6 +437,7 @@ def test_public_catalog_draft_exclusion(client):
   zip.file('src/components/chat/ChatModal.tsx', chatModalRaw);
   zip.file('src/components/dashboard/DashboardView.tsx', dashboardViewRaw);
   zip.file('src/components/admin/AdminDashboardView.tsx', adminDashboardRaw);
+  zip.file('src/components/admin/AdminStandalonePage.tsx', adminStandalonePageRaw);
   zip.file('src/components/admin/ProjectExportView.tsx', projectExportViewRaw);
 
   zip.file('src/components/videos/B2BVideoFeed.tsx', videoFeedRaw);

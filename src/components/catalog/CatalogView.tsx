@@ -1,7 +1,9 @@
-import React, { useState, useMemo } from 'react';
-import { Product, ProductFilterState, AdVideo } from '../../types';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Product, ProductFilterState, AdVideo, AdBanner } from '../../types';
 import { ProductCard } from './ProductCard';
 import { VideoAdCard } from '../videos/VideoAdCard';
+import { ScrollingAdBanner } from './ScrollingAdBanner';
+import { getAdBanners } from '../../services/storageService';
 import {
   CATEGORIES_LIST,
   COUNTRIES_LIST,
@@ -18,6 +20,7 @@ import {
   RotateCcw,
   Film,
   Sparkles,
+  ShoppingBag,
 } from 'lucide-react';
 
 interface CatalogViewProps {
@@ -36,6 +39,7 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   onSelectProduct,
   onContactSupplier,
   onContactSupplierById,
+  onNavigateAddProduct,
   onNavigateVideos,
 }) => {
   const [search, setSearch] = useState('');
@@ -44,6 +48,11 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
   const [sortBy, setSortBy] = useState<'recent' | 'price-asc' | 'price-desc' | 'moq-asc'>('recent');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const [adBanners, setAdBanners] = useState<AdBanner[]>(() => getAdBanners());
+
+  useEffect(() => {
+    setAdBanners(getAdBanners());
+  }, []);
 
   // Filter logic
   const filteredProducts = useMemo(() => {
@@ -247,22 +256,51 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
           </div>
         </div>
 
+        {/* BANNIÈRE DÉFILANTE 1 (HAUT DE CATALOGUE) */}
+        <ScrollingAdBanner
+          banners={adBanners}
+          position="top"
+          onNavigateVideos={onNavigateVideos}
+          onViewProduct={(id) => {
+            const p = products.find((x) => x.id === id);
+            if (p) onSelectProduct(p);
+          }}
+          onContactSupplier={(supplierId, productId) => {
+            if (onContactSupplierById) onContactSupplierById(supplierId, productId);
+          }}
+        />
+
         {/* Product Grid with Interleaved Video Ads ("exactement comme les produits") */}
         {filteredProducts.length === 0 ? (
-          <div className="my-8 p-8 bg-white rounded-2xl border border-slate-200 text-center max-w-lg mx-auto">
-            <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-2">
-              <Search className="w-5 h-5 text-slate-400" />
+          <div className="my-8 p-8 bg-white rounded-2xl border border-slate-200 text-center max-w-lg mx-auto shadow-xs">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-3 border border-amber-200/60">
+              <ShoppingBag className="w-6 h-6" />
             </div>
-            <h3 className="text-sm font-bold text-slate-900">Aucun produit ne correspond à vos critères</h3>
-            <p className="text-xs text-slate-500 mt-1 mb-3">
-              Modifiez votre recherche ou réinitialisez les filtres.
+            <h3 className="text-base font-bold text-slate-900">
+              {products.length === 0
+                ? 'Plateforme initialisée · 0 offre publiée'
+                : 'Aucun produit ne correspond à vos critères'}
+            </h3>
+            <p className="text-xs text-slate-500 mt-1 mb-4 leading-relaxed">
+              {products.length === 0
+                ? 'Toutes les données du site sont prêtes à zéro. Publiez vos premières offres ou chargez des annonces depuis votre espace.'
+                : 'Modifiez votre recherche ou réinitialisez les filtres sélectionnés.'}
             </p>
-            <button
-              onClick={resetFilters}
-              className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
-            >
-              Voir tous les produits
-            </button>
+            {products.length === 0 && onNavigateAddProduct ? (
+              <button
+                onClick={onNavigateAddProduct}
+                className="px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 text-xs font-bold rounded-xl transition-all shadow-sm cursor-pointer"
+              >
+                + Publier la première offre B2B
+              </button>
+            ) : (
+              <button
+                onClick={resetFilters}
+                className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+              >
+                Voir tous les produits
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 mt-4">
@@ -299,6 +337,20 @@ export const CatalogView: React.FC<CatalogViewProps> = ({
             })}
           </div>
         )}
+
+        {/* BANNIÈRE DÉFILANTE 2 (MILIEU DE CATALOGUE) */}
+        <ScrollingAdBanner
+          banners={adBanners}
+          position="middle"
+          onNavigateVideos={onNavigateVideos}
+          onViewProduct={(id) => {
+            const p = products.find((x) => x.id === id);
+            if (p) onSelectProduct(p);
+          }}
+          onContactSupplier={(supplierId, productId) => {
+            if (onContactSupplierById) onContactSupplierById(supplierId, productId);
+          }}
+        />
       </section>
 
       {/* How it works section */}

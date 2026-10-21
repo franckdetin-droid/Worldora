@@ -10,6 +10,7 @@ import {
   getAllProductsAdmin,
   toggleUserVerification,
   toggleProductStatusAdmin,
+  resetAllSiteDataToZero,
 } from '../../services/storageService';
 import {
   CATEGORIES_LIST,
@@ -41,6 +42,7 @@ import {
   Filter,
   Download,
   FileArchive,
+  RotateCcw,
 } from 'lucide-react';
 import { ProjectExportView } from './ProjectExportView';
 
@@ -204,12 +206,29 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
               </h1>
             </div>
           </div>
-          <button
-            onClick={onLogout}
-            className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded bg-slate-900 border border-slate-800 cursor-pointer"
-          >
-            Sortir
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              type="button"
+              onClick={() => {
+                if (window.confirm('Voulez-vous remettre toutes les données du site à zéro ? (0 produit, 0 vidéo, 0 message, 0 visiteur)')) {
+                  resetAllSiteDataToZero();
+                  loadAdminData();
+                  alert('Toutes les données du site ont été remises à zéro.');
+                }
+              }}
+              className="text-[10px] sm:text-xs text-rose-300 hover:text-white px-2 py-1 rounded bg-rose-950/80 border border-rose-800/80 cursor-pointer flex items-center gap-1 font-semibold"
+              title="Remettre toutes les données à zéro"
+            >
+              <RotateCcw className="w-3 h-3 text-rose-400" />
+              <span>Reset 0</span>
+            </button>
+            <button
+              onClick={onLogout}
+              className="text-xs text-slate-400 hover:text-white px-2.5 py-1 rounded bg-slate-900 border border-slate-800 cursor-pointer"
+            >
+              Sortir
+            </button>
+          </div>
         </div>
         <p className="text-xs text-slate-400">
           Supervision mobile du trafic mondial, régie publicitaire vidéo et modération.
@@ -219,10 +238,11 @@ export const AdminDashboardView: React.FC<AdminDashboardViewProps> = ({
         <div className="flex items-center justify-between gap-2 mt-2.5 pt-2 border-t border-slate-800/80 text-[11px]">
           <div className="flex items-center gap-1.5 text-amber-300">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <span>Admin connecté : <strong className="text-white">fluxlien@gmail.com</strong></span>
+            <span>Session sécurisée : <strong className="text-white">fluxlien@gmail.com</strong></span>
           </div>
-          <span className="text-amber-400 font-mono text-[10px] bg-amber-950/60 px-2 py-0.5 rounded border border-amber-800/50">
-            Mot de passe : fluxlien@gmail.com
+          <span className="text-emerald-400 font-medium text-[10px] bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800/50 flex items-center gap-1">
+            <ShieldCheck className="w-3 h-3" />
+            <span>Accès Protégé Actif</span>
           </span>
         </div>
 
