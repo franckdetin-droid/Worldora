@@ -171,8 +171,18 @@ export interface ContactMessage {
   name: string;
   email: string;
   phone?: string;
+  country?: string;
   subject: string;
   message: string;
   createdAt: string;
-  status: 'new' | 'read' | 'replied';
+  status: 'new' | 'read' | 'replied' | 'archived';
 }
+
+export interface ApkConfig {
+  downloadUrl: string;
+  version: string;
+  fileName: string;
+  enabled: boolean;
+  updatedAt?: string;
+}
+

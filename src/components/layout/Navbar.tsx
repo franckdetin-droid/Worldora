@@ -11,6 +11,7 @@ import {
   Film,
   ShieldCheck,
 } from 'lucide-react';
+import { WorldoraLogo } from '../common/WorldoraLogo';
 
 interface NavbarProps {
   currentUser: User | null;
@@ -35,23 +36,14 @@ export const Navbar: React.FC<NavbarProps> = ({
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 gap-4">
-          {/* Zone 1: Brand wordmark */}
+          {/* Zone 1: Brand wordmark & Logo */}
           <div className="flex items-center gap-3">
             <button
               onClick={() => onNavigate('catalog')}
-              className="flex items-center gap-2.5 text-left group cursor-pointer focus:outline-none"
+              className="text-left group cursor-pointer focus:outline-none"
+              title="Retour au catalogue WORLDORA"
             >
-              <div className="w-9 h-9 rounded-lg bg-slate-900 flex items-center justify-center text-white font-bold text-lg tracking-wider shadow-sm group-hover:bg-slate-800 transition-colors">
-                W
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xl font-bold tracking-tight text-slate-900 leading-none">
-                  WORLDORA
-                </span>
-                <span className="text-[10px] uppercase font-semibold text-slate-500 tracking-wider">
-                  Marketplace B2B
-                </span>
-              </div>
+              <WorldoraLogo size="md" />
             </button>
           </div>
 
@@ -95,7 +87,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Zone 3: Primary Actions */}
           <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-
             {currentUser ? (
               <div className="flex items-center gap-2 sm:gap-3">
                 {/* Fast shortcut: Add product if supplier or both */}

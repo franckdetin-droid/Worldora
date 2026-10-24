@@ -3,6 +3,7 @@ import { X, Lock, Mail, Building, MapPin, UserCheck, AlertCircle, ArrowRight, Sh
 import { AccountType, User } from '../../types';
 import { loginUser, registerUser, ADMIN_PASSWORD } from '../../services/storageService';
 import { COUNTRIES_LIST } from '../../data/seedData';
+import { WorldoraLogo } from '../common/WorldoraLogo';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -135,12 +136,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
       <div className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden my-8">
         {/* Header */}
         <div className="px-6 py-4 bg-slate-900 text-white flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded bg-white text-slate-900 font-bold flex items-center justify-center text-sm">
-              W
-            </div>
-            <span className="font-bold text-base tracking-tight">WORLDORA B2B</span>
-          </div>
+          <WorldoraLogo size="sm" lightMode />
           <button
             onClick={onClose}
             className="p-1 text-slate-400 hover:text-white rounded-lg transition-colors cursor-pointer"

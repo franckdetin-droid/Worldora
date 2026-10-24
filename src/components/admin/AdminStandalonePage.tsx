@@ -26,6 +26,7 @@ import {
   ADMIN_PRIMARY_EMAIL,
 } from '../../services/storageService';
 import { AdminDashboardView } from './AdminDashboardView';
+import { WorldoraLogo } from '../common/WorldoraLogo';
 
 interface AdminStandalonePageProps {
   currentUser: User | null;
@@ -122,16 +123,11 @@ export const AdminStandalonePage: React.FC<AdminStandalonePageProps> = ({
       <div className="min-h-screen bg-slate-950 text-white flex flex-col justify-between selection:bg-amber-500 selection:text-slate-950">
         {/* Minimal Admin Topbar */}
         <header className="px-4 py-3 sm:px-6 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-black flex items-center justify-center text-sm shadow-md">
-              W
-            </div>
-            <div>
-              <span className="font-bold text-sm tracking-tight text-white">WORLDORA B2B</span>
-              <span className="ml-2 text-[10px] uppercase font-bold text-amber-400 bg-amber-950/60 border border-amber-800/60 px-1.5 py-0.5 rounded">
-                Console Admin Protégée
-              </span>
-            </div>
+          <div className="flex items-center gap-3">
+            <WorldoraLogo size="sm" lightMode />
+            <span className="text-[10px] uppercase font-bold text-amber-400 bg-amber-950/60 border border-amber-800/60 px-2 py-0.5 rounded">
+              Console Admin Protégée
+            </span>
           </div>
 
           <button

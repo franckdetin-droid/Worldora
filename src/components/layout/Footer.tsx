@@ -1,6 +1,7 @@
 import React from 'react';
-import { ShieldCheck, MessageSquare, Globe2, Truck, Lock } from 'lucide-react';
+import { ShieldCheck, MessageSquare, Globe2, Truck } from 'lucide-react';
 import { getSocialLinks } from '../../services/storageService';
+import { WorldoraLogo } from '../common/WorldoraLogo';
 
 interface FooterProps {
   onNavigate?: (view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product' | 'contact') => void;
@@ -66,10 +67,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 py-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-slate-950 font-bold text-base">
-                W
-              </div>
-              <span className="text-xl font-bold tracking-tight text-white">WORLDORA</span>
+              <WorldoraLogo size="md" lightMode />
             </div>
             <p className="text-xs text-slate-400 mt-3 max-w-md leading-relaxed">
               WORLDORA est la place de marché B2B nouvelle génération dédiée aux échanges commerciaux directs entre acheteurs professionnels et fabricants certifiés à travers le monde.
@@ -174,8 +172,12 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
         </div>
 
         <div className="pt-6 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-          <p>© {new Date().getFullYear()} WORLDORA B2B Marketplace. Tous droits réservés.</p>
-          <div className="flex items-center gap-4">
+          <p className="flex items-center gap-1.5 flex-wrap">
+            <span>© {new Date().getFullYear()} WORLDORA B2B Marketplace. Tous droits réservés.</span>
+            <span>·</span>
+            <span className="text-amber-400 font-semibold">Fait par Franck</span>
+          </p>
+          <div className="flex items-center gap-3.5 flex-wrap">
             <button
               type="button"
               onClick={() => onNavigate && onNavigate('contact')}
@@ -189,20 +191,10 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <span>EUR (€)</span>
             <span>·</span>
             <span>HTTPS Sécurisé</span>
-            {onNavigate && (
-              <>
-                <span>·</span>
-                <button
-                  type="button"
-                  onClick={() => onNavigate('admin')}
-                  className="hover:text-amber-400 text-slate-500 transition-colors cursor-pointer inline-flex items-center gap-1"
-                  title="Accéder à la console d'administration (/admin)"
-                >
-                  <Lock className="w-3 h-3 text-slate-400" />
-                  <span>Admin (/admin)</span>
-                </button>
-              </>
-            )}
+            <span>·</span>
+            <span className="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/20 px-2.5 py-0.5 rounded-full text-[11px] inline-flex items-center gap-1">
+              ✨ Fait par Franck
+            </span>
           </div>
         </div>
       </div>

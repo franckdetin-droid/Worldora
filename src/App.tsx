@@ -25,6 +25,7 @@ import { ChatModal } from './components/chat/ChatModal';
 import { DashboardView } from './components/dashboard/DashboardView';
 import { AdminStandalonePage } from './components/admin/AdminStandalonePage';
 import { B2BVideoFeed } from './components/videos/B2BVideoFeed';
+import { ContactView } from './components/contact/ContactView';
 
 // Helper to check if current URL points to admin (/admin, #admin, ?admin)
 const checkIsAdminUrl = (): boolean => {
@@ -46,7 +47,7 @@ export default function App() {
   const [adVideos, setAdVideos] = useState<AdVideo[]>([]);
   const [unreadCount, setUnreadCount] = useState<number>(0);
   const [currentView, setCurrentView] = useState<
-    'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product'
+    'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product' | 'contact'
   >(() => (checkIsAdminUrl() ? 'admin' : 'catalog'));
   const [dashboardTab, setDashboardTab] = useState<
     'overview' | 'products' | 'add-product' | 'messages' | 'profile' | 'settings'
@@ -198,8 +199,14 @@ export default function App() {
 
   // Navigation controller
   const handleNavigate = (
-    view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product'
+    view: 'catalog' | 'videos' | 'dashboard' | 'admin' | 'messages' | 'add-product' | 'contact'
   ) => {
+    if (view === 'contact') {
+      setCurrentView('contact');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
     if (view === 'admin') {
       setCurrentView('admin');
       try {
@@ -315,8 +322,11 @@ export default function App() {
             onViewProductDetail={(p) => setSelectedProduct(p)}
             initialTab={dashboardTab}
             onNavigateCatalog={() => setCurrentView('catalog')}
-            onNavigateAdmin={() => handleNavigate('admin')}
           />
+        )}
+
+        {currentView === 'contact' && (
+          <ContactView onNavigateCatalog={() => handleNavigate('catalog')} />
         )}
       </div>
 

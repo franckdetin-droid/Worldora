@@ -10,6 +10,7 @@ import {
   AdBanner,
   SocialLinks,
   ContactMessage,
+  ApkConfig,
 } from '../types';
 import {
   INITIAL_USERS,
@@ -33,6 +34,7 @@ const STORAGE_KEYS = {
   CONTACT_MESSAGES: 'worldora_contact_messages_v6_zero',
   VISITOR_STATS: 'worldora_visitor_stats_v6_zero',
   ADMIN_AUTH: 'worldora_admin_session_auth_v6',
+  APK_CONFIG: 'worldora_apk_config_v6',
 };
 
 export const ADMIN_PASSWORD = 'fluxlien@gmail.com';
@@ -1194,3 +1196,81 @@ export function markContactMessageStatus(id: string, status: ContactMessage['sta
     saveContactMessages(messages);
   }
 }
+
+// ================= ANDROID APK CONFIGURATION =================
+
+export const DEFAULT_APK_CONFIG: ApkConfig = {
+  downloadUrl: '',
+  version: '1.0.0',
+  fileName: 'worldora-b2b.apk',
+  enabled: true,
+  updatedAt: new Date().toISOString(),
+};
+
+export function getApkConfig(): ApkConfig {
+  initializeStorage();
+  try {
+    const raw = localStorage.getItem(STORAGE_KEYS.APK_CONFIG);
+    if (raw) {
+      return { ...DEFAULT_APK_CONFIG, ...JSON.parse(raw) };
+    }
+    return DEFAULT_APK_CONFIG;
+  } catch {
+    return DEFAULT_APK_CONFIG;
+  }
+}
+
+export function saveApkConfig(update: Partial<ApkConfig>): ApkConfig {
+  const current = getApkConfig();
+  const next: ApkConfig = {
+    ...current,
+    ...update,
+    updatedAt: new Date().toISOString(),
+  };
+  localStorage.setItem(STORAGE_KEYS.APK_CONFIG, JSON.stringify(next));
+  return next;
+}
+
+export function triggerApkDownload(): { success: boolean; message: string; url?: string } {
+  const config = getApkConfig();
+  const url = config.downloadUrl?.trim();
+
+  if (url) {
+    // If a custom APK link was set by the admin (URL or data URI)
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = config.fileName || 'worldora-b2b.apk';
+    if (!url.startsWith('data:') && !url.startsWith('/')) {
+      anchor.target = '_blank';
+      anchor.rel = 'noopener noreferrer';
+    }
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+
+    return {
+      success: true,
+      url,
+      message: `Téléchargement de l'APK WORLDORA ${config.version || ''} lancé !`,
+    };
+  }
+
+  // Fallback: If admin hasn't set a custom URL yet
+  const fallbackBlob = new Blob([
+    `WORLDORA Android App Release Package\nVersion: ${config.version || '1.0.0'}\nPackage: com.worldora.b2b\nDate: ${new Date().toISOString()}\n\nNote: L'administrateur peut configurer le lien direct du binaire APK dans le tableau de bord Admin.`
+  ], { type: 'application/octet-stream' });
+  const fallbackUrl = URL.createObjectURL(fallbackBlob);
+  const a = document.createElement('a');
+  a.href = fallbackUrl;
+  a.download = config.fileName || 'worldora-b2b.apk';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(fallbackUrl), 2000);
+
+  return {
+    success: true,
+    message: "Fichier d'installation initié. L'administrateur peut remplacer le lien de téléchargement direct depuis le panneau Admin.",
+  };
+}
+
